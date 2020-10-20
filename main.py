@@ -10,13 +10,33 @@ prefix = ';'
 bot = commands.Bot(command_prefix=prefix, description="WaifuBattle Bot", case_insensitive=True)
 bot.remove_command("help")
 
-if __name__ == '__main__':
-    for extension in [f.replace('.py', '') for f in listdir('cogs') if isfile(join('cogs', f))]:
-        try:
-            bot.load_extension("cogs." + extension)
-        except (discord.ClientException, ModuleNotFoundError):
-            print(f'Failed to load extension {extension}.')
-            traceback.print_exc()
+if __name__ == '__main__': # Cog loader v2
+    def load_dir_files(path):
+        print("\n")
+        for item in listdir(path):
+            if os.path.isdir(path) and item != ".DS_Store" and item != "__pycache__" and not item.endswith(".py"):
+                new_path = path+f"/{item}"
+                load_dir_files(new_path)
+            elif item.endswith(".py"):
+                new_path = path+f"/{item}"
+                new_path = new_path.replace(".py", "")
+                load_path = new_path.replace("/", ".")
+                num = 20
+                for letter in str(item):
+                    num -= 1
+                empty = ""
+                for i in range(num): # Makes things look nicer(ish?) in the console... lol
+                    empty += " "
+                try:
+                    print(f"Loading {item}...", end = " ")# print(f"[{path}] : Loading {item}...", end = " ")
+                    bot.load_extension(load_path)
+                    print(f"{empty}[SUCCESS]")
+                except (discord.ClientException, ModuleNotFoundError):
+                    print(f"\n{empty}[FAILURE]")
+                    print(f'Failed to load extension {item}.\n')
+                    traceback.print_exc()
+
+    load_dir_files('cogs')
 
 @bot.event
 async def on_ready():
