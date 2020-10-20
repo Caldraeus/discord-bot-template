@@ -5,9 +5,13 @@ import sys, traceback
 from os import listdir
 from os.path import isfile, join
 
+
+intents = discord.Intents.all() # All intents, alter if needed.
 bot = discord.Client()
+
 prefix = ';'
-bot = commands.Bot(command_prefix=prefix, description="WaifuBattle Bot", case_insensitive=True)
+
+bot = commands.Bot(command_prefix=prefix, description="Bot", case_insensitive=True, intents=intents)
 bot.remove_command("help")
 
 if __name__ == '__main__': # Cog loader v2
@@ -69,4 +73,4 @@ async def invite_link(ctx):
     await ctx.send("N?A")
 
 
-bot.run('NjcxMTk2Mjc1MTQzNzM3MzQ1.Xrg6kA.CV1TEdFj2bllLznFWapk2pZL_pc')
+bot.run('HKJSHdkljsHLkjhskjDHKJShskjhdskjdhsjdhskdhhelloworldHDJKShKJDH')
