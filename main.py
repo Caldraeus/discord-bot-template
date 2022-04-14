@@ -37,8 +37,6 @@ if __name__ == '__main__': # Cog loader V3
                 for letter in str(item + dash):
                     num -= 1
                 empty = ""
-                if "special_classes" in path:
-                    num += 3
                 for i in range(num): # Makes things look nicer in the console... lol
                     empty += " "
                 try:
