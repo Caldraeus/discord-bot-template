@@ -4,6 +4,14 @@ from discord.ext.commands.cooldowns import BucketType
 import sys, traceback
 from os import listdir
 from os.path import isfile, join
+from discord.utils import find
+from discord import Webhook, AsyncWebhookAdapter
+import os
+
+intents = discord.Intents.all()
+bot = discord.Client()
+bot = commands.Bot(command_prefix=";", description="Bot", case_insensitive=True, intents=intents)
+bot.remove_command("help")
 
 
 intents = discord.Intents.all() # All intents, alter if needed.
@@ -14,25 +22,27 @@ prefix = ';'
 bot = commands.Bot(command_prefix=prefix, description="Bot", case_insensitive=True, intents=intents)
 bot.remove_command("help")
 
-if __name__ == '__main__': # Cog loader v2
-    def load_dir_files(path):
-        print("\n")
+if __name__ == '__main__': # Cog loader V3
+    def load_dir_files(path, dash):
+        #print("\n")
         for item in listdir(path):
-            if os.path.isdir(path) and item != ".DS_Store" and item != "__pycache__" and not item.endswith(".py"):
+            if os.path.isdir(path) and item != ".DS_Store" and item != "__pycache__" and not item.endswith(".py") and not item.endswith(".md") and not item.endswith(".json"):
                 new_path = path+f"/{item}"
-                load_dir_files(new_path)
+                load_dir_files(new_path, f"{dash}───")
             elif item.endswith(".py"):
                 new_path = path+f"/{item}"
                 new_path = new_path.replace(".py", "")
                 load_path = new_path.replace("/", ".")
-                num = 20
-                for letter in str(item):
+                num = 100
+                for letter in str(item + dash):
                     num -= 1
                 empty = ""
-                for i in range(num): # Makes things look nicer(ish?) in the console... lol
+                if "special_classes" in path:
+                    num += 3
+                for i in range(num): # Makes things look nicer in the console... lol
                     empty += " "
                 try:
-                    print(f"Loading {item}...", end = " ")# print(f"[{path}] : Loading {item}...", end = " ")
+                    print(f"{dash} Loading {item}...", end = " ")# print(f"[{path}] : Loading {item}...", end = " ")
                     bot.load_extension(load_path)
                     print(f"{empty}[SUCCESS]")
                 except (discord.ClientException, ModuleNotFoundError):
@@ -40,7 +50,7 @@ if __name__ == '__main__': # Cog loader v2
                     print(f'Failed to load extension {item}.\n')
                     traceback.print_exc()
 
-    load_dir_files('cogs')
+    load_dir_files('cogs' ,"├─")
 
 @bot.event
 async def on_ready():
