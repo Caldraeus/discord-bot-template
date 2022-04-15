@@ -1,32 +1,33 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands.cooldowns import BucketType
-import math
-import os
 
-class ProfileCommands(commands.Cog):
+class owner_only(commands.Cog): # Example cog.
     def __init__(self, bot):
         self.bot = bot
+    
+    @commands.command()
+    @commands.is_owner()
+    async def update(self, ctx, cog, new = None): # Example owner command to reload a cog.
+        if new == None:
+            lists = self.bot.extensions
+            for item in lists:
+                item = item.split('.')
+                if item[-1] == cog.lower():
+                    pwd = '.'.join(item)
+                    break
 
-    """
-    @commands.command(aliases=['setcolour', "setc"])
-    @commands.guild_only()
-    async def profile_colour(self, ctx, r: int = None, g: int = None, b: int = None):
-        if r != None and g != None and b != None:
             try:
-                
-                color = discord.Colour.from_rgb(r,g,b)
-                embed = discord.Embed(colour=color)
-                current = h.user_color(ctx.author.id)
-                embed.set_author(name=f"Profile colour successfully changed to [{r}, {g}, {b}]. Previously set as {current}")
-                h.user_color(ctx.author.id, [r, g, b])
-                await ctx.send(embed=embed)
-            except SyntaxError:
-                await ctx.send("<:redtick:605424981245034511> | Numbers can not be lower than 0 or higher than 255.")
+                await self.bot.reload_extension(str(pwd))
+                await ctx.send(f"Successfully updated `{pwd}` with [0] errors.")
+            except UnboundLocalError:
+                await ctx.send(f"❗ | Cog `{cog}` not found.")
         else:
-            await ctx.send("<:redtick:605424981245034511> | Invalid format. Example: `;setc 255 255 255`.")
-    """
+            try:
+                await self.bot.load_extension(cog)
+                await ctx.send(f"Loaded new cog `{cog}`.")
+            except ValueError:
+                await ctx.send(f"❗ | Invalid path for `{cog}`.")
 
 # A setup function the every cog has
-def setup(bot):
-    bot.add_cog(ProfileCommands(bot))
+async def setup(bot):
+    await bot.add_cog(owner_only(bot))

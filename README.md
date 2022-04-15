@@ -1,4 +1,8 @@
 # discord-bot-template
 A standard bot template I create a while back. Uses a cog loader and can load sub-folders of cogs.
 
-Also, before anyone asks - no, that's not a real bot token left in the code. Just an example.
+You'll need to run the following (for linux at least, I don't know the windows version, sorry.)
+
+`python -m pip install -U git+https://github.com/Rapptz/discord.py.git`
+
+Now supporting discord.py 3.0.
